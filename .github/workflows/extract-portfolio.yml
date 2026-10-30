@@ -17,8 +17,8 @@ jobs:
 
       - name: Unzip portfolio archive
         run: |
-          unzip -o Sopan_Shinde_3D_Portfolio_With_GitHub.zip
-          rm -f Sopan_Shinde_3D_Portfolio_With_GitHub.zip
+          unzip -o Sopan_Shinde_Portfolio_Download.zip
+          rm -f Sopan_Shinde_Portfolio_Download.zip
 
       - name: Configure git identity
         run: |
