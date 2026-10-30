@@ -1,0 +1,32 @@
+name: Extract Portfolio
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unzip portfolio archive
+        run: |
+          unzip -o Sopan_Shinde_3D_Portfolio_With_GitHub.zip
+          rm -f Sopan_Shinde_3D_Portfolio_With_GitHub.zip
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit extracted files
+        run: |
+          git add -A
+          git commit -m "Extract portfolio source archive" || echo "No changes to commit"
+          git push
