@@ -17,8 +17,24 @@ jobs:
 
       - name: Unzip portfolio archive
         run: |
-          unzip -o Sopan_Shinde_Portfolio_Download.zip
+          mkdir -p /tmp/portfolio
+          unzip -o Sopan_Shinde_Portfolio_Download.zip -d /tmp/portfolio
           rm -f Sopan_Shinde_Portfolio_Download.zip
+
+      - name: Copy contents from extracted folder to root
+        run: |
+          cp -r /tmp/portfolio/sopan-3d-portfolio/* /tmp/portfolio/sopan-3d-portfolio/.* . 2>/dev/null || true
+
+      - name: Clean up temporary files
+        run: |
+          rm -rf /tmp/portfolio
+          find . -name ".gitattributes" -delete
+
+      - name: Remove LFS pointer for character.glb if 132 bytes
+        run: |
+          if [ -f public/models/character.glb ] && [ "$(wc -c public/models/character.glb | awk '{print $1}')" -eq 132 ]; then
+            rm -f public/models/character.glb
+          fi
 
       - name: Configure git identity
         run: |
@@ -28,5 +44,5 @@ jobs:
       - name: Commit extracted files
         run: |
           git add -A
-          git commit -m "Extract portfolio source archive" || echo "No changes to commit"
+          git commit -m "Extract portfolio into repository root and skip missing LFS pointer" || echo "No changes to commit"
           git push
